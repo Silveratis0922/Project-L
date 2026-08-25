@@ -1,0 +1,8 @@
+.env
+ROADMAP.md
+lec_stats.duckdb
+venv/
+__pycache__/
+.vscode/
+logs/
+config/

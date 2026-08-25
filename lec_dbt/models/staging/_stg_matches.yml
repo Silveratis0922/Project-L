@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_matches
+    columns:
+      - name: match_id
+        tests:
+          - unique
+          - not_null
+      - name: serie_id
+        tests:
+          - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['not_started', 'running', 'finished', 'canceled', 'postponed']

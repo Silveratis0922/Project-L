@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: calendrier
+    columns:
+      - name: match_id
+        tests:
+          - unique
+          - not_null
+
+  - name: classement
+    columns:
+      - name: team_id
+        tests:
+          - not_null
+      - name: tournament_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_matches')
+                field: tournament_id

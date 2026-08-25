@@ -1,0 +1,7 @@
+lec_dbt:
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DUCKDB_PATH', '/home/tchantro/Documents/Project-L/lec_stats.duckdb')}}"
+      threads: 1
+  target: dev
