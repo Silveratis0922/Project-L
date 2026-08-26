@@ -17,8 +17,6 @@ MINIO_ENDPOINT= os.getenv("MINIO_ENDPOINT", "http://localhost:9000")
 MINIO_ACCESS_KEY= os.getenv("MINIO_ROOT_USER")
 MINIO_SECRET_KEY= os.getenv("MINIO_ROOT_PASSWORD")
 
-if not TOKEN:
-    raise ValueError("PANDASCORE_TOKEN manquant dans le .env")
 
 headers = {"Authorization": f"Bearer {TOKEN}"}
 s3_client = boto3.client(
@@ -93,6 +91,9 @@ def flatten_match(match: dict) -> dict:
 
 
 def main() -> None:
+    if not TOKEN:
+        raise ValueError("PANDASCORE_TOKEN manquant dans le .env")
+        
     serie_id = get_current_serie_id()
 
     all_matches = get_matches(serie_id)
