@@ -1,8 +1,8 @@
 import json
 import os
-import boto3
 from datetime import date
 
+import boto3
 import pandas as pd
 import requests
 from dotenv import load_dotenv

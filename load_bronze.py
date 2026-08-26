@@ -1,4 +1,5 @@
 import os
+
 import duckdb
 from dotenv import load_dotenv
 
@@ -12,8 +13,8 @@ con.load_extension("httpfs")
 con.sql(f"SET s3_endpoint='{os.getenv('MINIO_ENDPOINT_HOST', 'localhost:9000')}'")
 con.sql(f"SET s3_access_key_id='{os.getenv('MINIO_ROOT_USER')}'")
 con.sql(f"SET s3_secret_access_key='{os.getenv('MINIO_ROOT_PASSWORD')}'")
-con.sql(f"SET s3_use_ssl=false")
-con.sql(f"SET s3_url_style='path'")
+con.sql("SET s3_use_ssl=false")
+con.sql("SET s3_url_style='path'")
 
 con.sql("""
     CREATE OR REPLACE TABLE matches_raw AS

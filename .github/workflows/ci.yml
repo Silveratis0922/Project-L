@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint with ruff
+        run: ruff check .
+
+      - name: Run tests
+        run: pytest
+  
+  dbt-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build fixture database
+        run: |
+          python -c "
+          import duckdb
+          con = duckdb.connect('ci_test.duckdb')
+          con.sql(\"CREATE OR REPLACE TABLE matches_raw AS SELECT * FROM read_json_auto('lec_dbt/tests/fixtures/sample_matches.json')\")
+          "
+      - name: dbt run
+        working-directory: lec_dbt
+        run: dbt run --profiles-dir . --vars '{}'
+        env:
+          DUCKDB_PATH: ${{ github.workspace }}/ci_test.duckdb
+      
+      - name: dbt test
+        working-directory: lec_dbt
+        run: dbt test --profiles-dir .
+        env:
+          DUCKDB_PATH: ${{ github.workspace }}/ci_test.duckdb

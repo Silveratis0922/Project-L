@@ -20,3 +20,19 @@ models:
               arguments:
                 to: ref('stg_matches')
                 field: tournament_id
+
+unit_tests:
+  - name: test_classement_wins_losses
+    description: "2 match fictifs entre 2 equipes : Team A doit finir 2 victoires / 0 defaite"
+    model: classement
+    given:
+      - input: ref('stg_matches')
+        format: dict
+        rows:
+          - {tournament_id: 10, tournament_name: "Regular Season", status: "finished", team1_id: 1, team1_name: "Team A", team2_id: 2, team2_name: "Team B", winner_id: 1}
+          - {tournament_id: 10, tournament_name: "Regular Season", status: "finished", team1_id: 2, team1_name: "Team B", team2_id: 1, team2_name: "Team A", winner_id: 1}
+    expect:
+      format: dict
+      rows:
+        - {tournament_id: 10, tournament_name: "Regular Season", team_id: 1, team_name: "Team A", wins: 2, losses: 0, matches_played: 2}
+        - {tournament_id: 10, tournament_name: "Regular Season", team_id: 2, team_name: "Team B", wins: 0, losses: 2, matches_played: 2}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1, "name": "A vs B", "status": "finished",
+    "begin_at": "2026-01-01T00:00:00Z", "end_at": "2026-01-01T01:00:00Z",
+    "modified_at": "2026-01-01T01:00:00Z",
+    "serie_id": 10756, "tournament_id": 21344, "winner_id": 1,
+    "tournament": {"name": "Regular Season"},
+    "opponents": [
+      {"opponent": {"id": 1, "name": "Team A"}},
+      {"opponent": {"id": 2, "name": "Team B"}}
+    ],
+    "results": [{"team_id": 1, "score": 2}, {"team_id": 2, "score": 0}]
+  },
+  {
+    "id": 2, "name": "B vs A", "status": "finished",
+    "begin_at": "2026-01-02T00:00:00Z", "end_at": "2026-01-02T01:00:00Z",
+    "modified_at": "2026-01-02T01:00:00Z",
+    "serie_id": 10756, "tournament_id": 21344, "winner_id": 1,
+    "tournament": {"name": "Regular Season"},
+    "opponents": [
+      {"opponent": {"id": 2, "name": "Team B"}},
+      {"opponent": {"id": 1, "name": "Team A"}}
+    ],
+    "results": [{"team_id": 2, "score": 1}, {"team_id": 1, "score": 2}]
+  }
+]

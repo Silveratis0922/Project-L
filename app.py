@@ -3,8 +3,6 @@ import streamlit as st
 
 st.set_page_config(page_title="LEC Stats", layout="wide")
 
-con = duckdb.connect("lec_stats.duckdb", read_only=True)
-
 st.title("LEC Stats - Summer 2026")
 
 tab_calendrier, tab_classement, tab_series, tab_joueurs, tab_equipes, tab_pickban = st.tabs(
