@@ -6,8 +6,8 @@
     "serie_id": 10756, "tournament_id": 21344, "winner_id": 1,
     "tournament": {"name": "Regular Season"},
     "opponents": [
-      {"opponent": {"id": 1, "name": "Team A"}},
-      {"opponent": {"id": 2, "name": "Team B"}}
+      {"opponent": {"id": 1, "name": "Team A", "acronym": "TA", "image_url": "https://example.com/team_a.png"}},
+      {"opponent": {"id": 2, "name": "Team B", "acronym": "TB", "image_url": "https://example.com/team_b.png"}}
     ],
     "results": [{"team_id": 1, "score": 2}, {"team_id": 2, "score": 0}]
   },
@@ -18,8 +18,8 @@
     "serie_id": 10756, "tournament_id": 21344, "winner_id": 1,
     "tournament": {"name": "Regular Season"},
     "opponents": [
-      {"opponent": {"id": 2, "name": "Team B"}},
-      {"opponent": {"id": 1, "name": "Team A"}}
+      {"opponent": {"id": 2, "name": "Team B", "acronym": "TB", "image_url": "https://example.com/team_b.png"}},
+      {"opponent": {"id": 1, "name": "Team A", "acronym": "TA", "image_url": "https://example.com/team_a.png"}}
     ],
     "results": [{"team_id": 2, "score": 1}, {"team_id": 1, "score": 2}]
   }

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1, "name": "Team A", "acronym": "TA",
+    "image_url": "https://example.com/team_a.png",
+    "dark_mode_image_url": "https://example.com/team_a_dark.png",
+    "location": "FR", "slug": "team-a",
+    "modified_at": "2026-01-01T00:00:00Z",
+    "players": [
+      {"id": 101, "name": "PlayerOne", "role": "top", "nationality": "FR", "age": 20, "active": true, "image_url": "https://example.com/p1.png"},
+      {"id": 102, "name": "PlayerTwo", "role": "mid", "nationality": "FR", "age": 22, "active": true, "image_url": "https://example.com/p2.png"}
+    ]
+  },
+  {
+    "id": 2, "name": "Team B", "acronym": "TB",
+    "image_url": "https://example.com/team_b.png",
+    "dark_mode_image_url": "https://example.com/team_b_dark.png",
+    "location": "DE", "slug": "team-b",
+    "modified_at": "2026-01-01T00:00:00Z",
+    "players": [
+      {"id": 201, "name": "PlayerThree", "role": "adc", "nationality": "DE", "age": 21, "active": true, "image_url": "https://example.com/p3.png"}
+    ]
+  }
+]

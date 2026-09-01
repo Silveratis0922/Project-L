@@ -43,6 +43,7 @@ jobs:
           import duckdb
           con = duckdb.connect('ci_test.duckdb')
           con.sql(\"CREATE OR REPLACE TABLE matches_raw AS SELECT * FROM read_json_auto('lec_dbt/tests/fixtures/sample_matches.json')\")
+          con.sql(\"CREATE OR REPLACE TABLE teams_raw AS SELECT + FROM read_json_auto('lec_dbt/test/fixtures/sample_teams.json')\")
           "
       - name: dbt run
         working-directory: lec_dbt
