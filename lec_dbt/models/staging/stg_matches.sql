@@ -23,6 +23,10 @@ select
     opponents[1].opponent.name as team1_name,
     opponents[2].opponent.id as team2_id,
     opponents[2].opponent.name as team2_name,
+    opponents[1].opponent.image_url as team1_logo,
+    opponents[2].opponent.image_url as team2_logo,
+    opponents[1].opponent.acronym as team1_acronym,
+    opponents[2].opponent.acronym as team2_acronym,
     list_filter(results, x -> x.team_id = opponents[1].opponent.id)[1].score as team1_score,
     list_filter(results, x -> x.team_id = opponents[2].opponent.id)[1].score as team2_score
 from latest

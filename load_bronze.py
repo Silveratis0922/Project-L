@@ -18,7 +18,14 @@ con.sql("SET s3_url_style='path'")
 
 con.sql("""
     CREATE OR REPLACE TABLE matches_raw AS
-    SELECT * FROM read_json_auto('s3://bronze/lec/summer2026/*.json')
+    SELECT * FROM read_json_auto('s3://bronze/lec/summer2026/matches_*.json')
 """)
 
 con.sql("SELECT COUNT(*) FROM matches_raw").show()
+
+con.sql("""
+    CREATE OR REPLACE TABLE teams_raw AS
+    SELECT * FROM read_json_auto('s3://bronze/lec/summer2026/teams_*.json')
+""")
+
+con.sql("SELECT COUNT(*) FROM teams_raw").show()

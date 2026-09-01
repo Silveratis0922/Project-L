@@ -18,21 +18,37 @@ models:
           - not_null
           - relationships:
               arguments:
-                to: ref('stg_matches')
+                to: ref('fct_matches_matches')
                 field: tournament_id
+
+  - name: dim_tournaments
+    columns:
+      - name: tournament_id
+        tests:
+          - unique
+          - not_null
 
 unit_tests:
   - name: test_classement_wins_losses
     description: "2 match fictifs entre 2 equipes : Team A doit finir 2 victoires / 0 defaite"
     model: classement
     given:
-      - input: ref('stg_matches')
+      - input: ref('fct_matches')
         format: dict
         rows:
-          - {tournament_id: 10, tournament_name: "Regular Season", status: "finished", team1_id: 1, team1_name: "Team A", team2_id: 2, team2_name: "Team B", winner_id: 1}
-          - {tournament_id: 10, tournament_name: "Regular Season", status: "finished", team1_id: 2, team1_name: "Team B", team2_id: 1, team2_name: "Team A", winner_id: 1}
+          - {match_id: 1, tournament_id: 10, status: "finished", team1_id: 1, team2_id: 2, winner_id: 1}
+          - {match_id: 1, tournament_id: 10, status: "finished", team1_id: 2, team2_id: 1, winner_id: 1}
+      - input: ref('dim_teams')
+        format: dict
+        rows:
+          - {team_id: 1, team_name: "Team A", team_logo: "logoA.png", team_acronym: "TA"}
+          - {team_id: 2, team_name: "Team B", team_logo: "logoB.png", team_acronym: "TB"}
+      - input: ref('dim_tournaments')
+        format: dict
+        rows:
+          - {tournament_id: 10, tournament_name: "Regular Season", serie_id: 100}
     expect:
       format: dict
       rows:
-        - {tournament_id: 10, tournament_name: "Regular Season", team_id: 1, team_name: "Team A", wins: 2, losses: 0, matches_played: 2}
-        - {tournament_id: 10, tournament_name: "Regular Season", team_id: 2, team_name: "Team B", wins: 0, losses: 2, matches_played: 2}
+        - {tournament_id: 10, tournament_name: "Regular Season", team_id: 1, team_name: "Team A", team_logo: "logoA.png", team_acronym: "TA", wins: 2, losses: 0, matches_played: 2}
+        - {tournament_id: 10, tournament_name: "Regular Season", team_id: 2, team_name: "Team B", team_logo: "logoB.png", team_acronym: "TB", wins: 0, losses: 2, matches_played: 2}

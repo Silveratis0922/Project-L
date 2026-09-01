@@ -4,63 +4,20 @@ from datetime import date
 
 import boto3
 import pandas as pd
-import requests
-from dotenv import load_dotenv
 
-load_dotenv()
-
-TOKEN = os.getenv("PANDASCORE_TOKEN")
-BASE_URL = "https://api.pandascore.co"
-LEAGUE_ID = 4197  # LEC
+from api_call import TOKEN, get_current_serie_id, get_matches
 
 MINIO_ENDPOINT= os.getenv("MINIO_ENDPOINT", "http://localhost:9000")
 MINIO_ACCESS_KEY= os.getenv("MINIO_ROOT_USER")
 MINIO_SECRET_KEY= os.getenv("MINIO_ROOT_PASSWORD")
 
 
-headers = {"Authorization": f"Bearer {TOKEN}"}
 s3_client = boto3.client(
     "s3",
     endpoint_url=MINIO_ENDPOINT,
     aws_access_key_id=MINIO_ACCESS_KEY,
     aws_secret_access_key=MINIO_SECRET_KEY
 )
-
-
-def get_current_serie_id() -> int:
-    """Récupère la série la plus récente de la LEC (triée par begin_at décroissant)."""
-    response = requests.get(
-        f"{BASE_URL}/lol/series",
-        headers=headers,
-        params={
-            "filter[league_id]": LEAGUE_ID,
-            "sort": "-begin_at",
-            "page[size]": 1,
-        },
-    )
-    response.raise_for_status()
-    series = response.json()
-
-    if not series:
-        raise RuntimeError("Aucune série trouvée pour cette ligue")
-
-    serie = series[0]
-    print(f"Série trouvée : {serie['full_name']} (id={serie['id']}, begin_at={serie['begin_at']})")
-    return serie["id"]
-
-
-def get_matches(serie_id: int) -> list[dict]:
-    """Récupère les matchs d'une série, quel que soit leur status (past, running, upcoming)."""
-    response = requests.get(
-        f"{BASE_URL}/lol/matches",
-        headers=headers,
-        params={
-            "filter[serie_id]": serie_id,
-            "page[size]": 100,
-        },
-    )
-    response.raise_for_status()
-    return response.json()
 
 
 def flatten_match(match: dict) -> dict:
@@ -95,7 +52,6 @@ def main() -> None:
         raise ValueError("PANDASCORE_TOKEN manquant dans le .env")
         
     serie_id = get_current_serie_id()
-
     all_matches = get_matches(serie_id)
     print(f"{len(all_matches)} matchs au total.")
 

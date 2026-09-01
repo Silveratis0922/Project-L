@@ -5,3 +5,4 @@ sources:
     schema: main
     tables:
       - name: matches_raw
+      - name: teams_raw

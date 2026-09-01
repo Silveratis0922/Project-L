@@ -1,57 +1,85 @@
 # LEC Stats Pipeline
 
+![Status](https://img.shields.io/badge/Statut-Termin%C3%A9-brightgreen)
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Airflow](https://img.shields.io/badge/Apache%20Airflow-3.3-orange)
+![dbt](https://img.shields.io/badge/dbt-1.12-red)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.62-FF4B4B)
+![Docker](https://img.shields.io/badge/Docker%20Compose-2496ED)
+
+## Description
+
 Pipeline de données de bout en bout collectant les résultats de la LEC
-(League of Legends European Championship) via l'API PandaScore, pour
-alimenter un dashboard Streamlit (calendrier, classement Regular Season /
-Playoffs).
+(League of Legends European Championship) via l'API PandaScore, modélisés
+en schéma en étoile et exposés dans un dashboard Streamlit (calendrier,
+classement).
 
 Projet portfolio réalisé dans le cadre d'une recherche d'alternance Data
 Engineer.
 
-## Scope
+## Aperçu
 
-- Ligue : LEC uniquement (`league_id=4197`)
-- Série suivie : la série en cours, récupérée dynamiquement (actuellement
-  Summer 2026)
-- Pas de stats joueurs/équipes/pick-ban détaillées pour l'instant — nécessite
-  le plan payant PandaScore "Historical", accès demandé mais pas encore
-  obtenu
+**Dashboard — Calendrier**
+![Calendrier](screenshots/calendrier.png)
 
-## Stack
+**Dashboard — Classement**
+![Classement](screenshots/classement.png)
 
-| Étape | Outil |
+**Monitoring Grafana**
+![Grafana](screenshots/grafana.png)
+
+**Modélisation (schéma en étoile)**
+![Schéma en étoile](screenshots/dbdiagram.png)
+
+## Architecture
+
+```mermaid
+flowchart LR
+    API[API PandaScore]
+    EXT[Extraction<br/>Python]
+    BRONZE[(MinIO<br/>Bronze — JSON brut)]
+    SILVER[(DuckDB<br/>Silver — staging)]
+    GOLD[(DuckDB<br/>Gold — schéma en étoile)]
+    DASH[Streamlit<br/>Dashboard]
+    MON[Grafana<br/>Monitoring]
+    AIRFLOW{{Apache Airflow<br/>2 DAGs}}
+    CI[[GitHub Actions<br/>CI/CD]]
+
+    API --> EXT --> BRONZE --> SILVER --> GOLD --> DASH
+    AIRFLOW -.orchestre.-> EXT
+    AIRFLOW -.orchestre.-> SILVER
+    AIRFLOW -.orchestre.-> GOLD
+    AIRFLOW -.suivi des runs.-> MON
+    CI -.valide.-> SILVER
+    CI -.valide.-> GOLD
+```
+
+## Stack technique
+
+| Couche | Technologie |
 |---|---|
-| Extraction | Python + Pandas |
-| Stockage Bronze (JSON brut) | MinIO |
-| Stockage Silver/Gold (OLAP) | DuckDB |
-| Transformation | dbt-core (adapter `dbt-duckdb`) |
+| Extraction | Python, Pandas |
+| Data Lake (Bronze) | MinIO (S3-compatible) |
+| Entrepôt (Silver/Gold) | DuckDB — schéma en étoile |
+| Transformation | dbt |
 | Orchestration | Apache Airflow |
-| Dashboard | Streamlit |
-| Conteneurisation | Docker / Docker Compose |
-| CI/CD | GitHub Actions |
-| Monitoring (bonus) | Grafana |
+| Visualisation | Streamlit |
+| Monitoring | Grafana |
+| Infrastructure | Docker, Docker Compose |
 
-100% local et gratuit — pas de service cloud payant.
+Choix techniques détaillés: [ARCHITECTURE.md](ARCHITECTURE.md)
 
-Détail des choix techniques et de leurs justifications : voir
-[ARCHITECTURE.md](ARCHITECTURE.md).
+## Lancer le projet
 
-## Statut
-
-🚧 En cours de développement.
-
-- [x] Extraction API — premiers appels PandaScore validés
-- [ ] Stockage Bronze (MinIO)
-- [ ] Modélisation Silver/Gold (DuckDB + dbt)
-- [ ] Dashboard Streamlit
-- [ ] Orchestration Airflow
-- [ ] CI/CD GitHub Actions
-- [ ] Monitoring Grafana
-
-## Setup
-
-Nécessite un token API PandaScore (gratuit) dans un fichier `.env` :
+Nécessite un fichier `.env` (token PandaScore + identifiants MinIO/Airflow/Grafana).
 
 ```
-PANDASCORE_TOKEN=xxxxx
+docker compose up -d
+streamlit run app.py (Dans un second terminal, ouve)
 ```
+
+Accès :
+- Dashboard : http://localhost:8501
+- Airflow : http://localhost:8080
+- Grafana : http://localhost:3000
+- Console MinIO : http://localhost:9001
